@@ -1,9 +1,9 @@
 FROM alpine:latest as builder
 LABEL org.opencontainers.image.authors "suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
 
-ARG UNBOUND_VERSION=1.19.0
+ARG UNBOUND_VERSION=1.20.0
 ARG GPG_FINGERPRINT="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"
-ARG SHA256_HASH="a97532468854c61c2de48ca4170de854fd3bc95c8043bb0cfb0fe26605966624"
+ARG SHA256_HASH="56b4ceed33639522000fd96775576ddf8782bb3617610715d7f1e777c5ec1dbf"
 
 
 RUN apk add --no-cache \
