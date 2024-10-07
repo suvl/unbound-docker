@@ -1,5 +1,5 @@
-FROM alpine:latest as builder
-LABEL org.opencontainers.image.authors "suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
+FROM alpine:latest AS builder
+LABEL org.opencontainers.image.authors="suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
 
 ARG UNBOUND_VERSION=1.21.1
 ARG GPG_FINGERPRINT="948EB42322C5D00B79340F5DCFF3344D9087A490"
@@ -48,7 +48,7 @@ RUN ./configure --prefix="" --with-libnghttp2 \
 
 
 FROM alpine:latest
-LABEL org.opencontainers.image.authors "suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
+LABEL org.opencontainers.image.authors="suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
 
 ENV UID=991
 
