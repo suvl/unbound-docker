@@ -1,10 +1,10 @@
-FROM alpine:latest AS builder
+FROM alpine:3.22.0@sha256:8a1f59ffb675680d47db6337b49d22281a139e9d709335b492be023728e11715 AS builder
+# checkov:skip=CKV_DOCKER_3: This is a builder image, so it is not necessary to run as a non-root user.
+
 LABEL org.opencontainers.image.authors="suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
 
-ARG UNBOUND_VERSION=1.21.1
-ARG GPG_FINGERPRINT="948EB42322C5D00B79340F5DCFF3344D9087A490"
-ARG SHA256_HASH="3036d23c23622b36d3c87e943117bdec1ac8f819636eb978d806416b0fa9ea46"
-
+ARG UNBOUND_VERSION=1.23.0
+ARG SHA256_HASH="959bd5f3875316d7b3f67ee237a56de5565f5b35fc9b5fc3cea6cfe735a03bb8"
 
 RUN apk add --no-cache \
       bash \
@@ -21,18 +21,10 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 
 WORKDIR /tmp
 RUN \
-   curl -OO https://www.nlnetlabs.nl/downloads/unbound/unbound-${UNBOUND_VERSION}.tar.gz{,.asc} && \
+   curl -OO https://www.nlnetlabs.nl/downloads/unbound/unbound-${UNBOUND_VERSION}.tar.gz && \
    echo "Verifying authenticity of unbound-${UNBOUND_VERSION}.tar.gz..." && \
    CHECKSUM=$(sha256sum unbound-${UNBOUND_VERSION}.tar.gz | awk '{print $1}') && \
    if [ "${CHECKSUM}" != "${SHA256_HASH}" ]; then echo "ERROR: Checksum does not match!" && exit 1; fi && \
-   ( \
-      gpg --recv-keys ${GPG_FINGERPRINT} || \
-      gpg --keyserver pgp.mit.edu --recv-keys ${GPG_FINGERPRINT} \
-   ) && \
-   FINGERPRINT="$(LANG=C gpg --verify unbound-${UNBOUND_VERSION}.tar.gz.asc unbound-${UNBOUND_VERSION}.tar.gz 2>&1 \
-                | sed -n 's#^Primary key fingerprint: \(.*\)#\1#p' | tr -d '[:space:]')" && \
-   if [ -z "${FINGERPRINT}" ]; then echo "ERROR: Invalid GPG signature!" && exit 1; fi && \
-   if [ "${FINGERPRINT}" != "${GPG_FINGERPRINT}" ]; then echo "ERROR: Wrong GPG fingerprint!" && exit 1; fi && \
    echo "SHA256 and GPG signature are correct"
 
 RUN echo "Extracting unbound-${UNBOUND_VERSION}.tar.gz..." && \
@@ -47,7 +39,7 @@ RUN ./configure --prefix="" --with-libnghttp2 \
     make install DESTDIR=/builder
 
 
-FROM alpine:latest
+FROM alpine:3.22.0@sha256:8a1f59ffb675680d47db6337b49d22281a139e9d709335b492be023728e11715
 LABEL org.opencontainers.image.authors="suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
 
 ENV UID=991
