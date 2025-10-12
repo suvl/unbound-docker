@@ -1,10 +1,10 @@
-FROM alpine:3.22.0@sha256:8a1f59ffb675680d47db6337b49d22281a139e9d709335b492be023728e11715 AS builder
+FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS builder
 # checkov:skip=CKV_DOCKER_3: This is a builder image, so it is not necessary to run as a non-root user.
 
 LABEL org.opencontainers.image.authors="suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
 
-ARG UNBOUND_VERSION=1.23.0
-ARG SHA256_HASH="959bd5f3875316d7b3f67ee237a56de5565f5b35fc9b5fc3cea6cfe735a03bb8"
+ARG UNBOUND_VERSION=1.23.1
+ARG SHA256_HASH="6a6b117c799d8de3868643397e0fd71591f6d42f4473f598bdb22609ff362590"
 
 RUN apk add --no-cache \
       bash \
@@ -39,7 +39,7 @@ RUN ./configure --prefix="" --with-libnghttp2 \
     make install DESTDIR=/builder
 
 
-FROM alpine:3.22.0@sha256:8a1f59ffb675680d47db6337b49d22281a139e9d709335b492be023728e11715
+FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412
 LABEL org.opencontainers.image.authors="suvl (https://github.com/suvl), selfhosting-tools (https://github.com/selfhosting-tools)"
 
 ENV UID=991
